@@ -1,7 +1,7 @@
 package com.ibex35.job
 
 import com.ibex35.service.IbexService.{startRedisDB, writeRedis}
-import com.ibex35.utils.Constants.{finishedBatchesCounter, sparkRedis, ssc, stream}
+import com.ibex35.utils.Constants.{finishedBatchesCounter, sparkRedis, ssc, streamInput}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
@@ -13,14 +13,13 @@ object ProcessIbex {
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("akka").setLevel(Level.OFF)
 
-    // We get a bunch of metadata from Kafka like partitions, timestamps, etc. Only interested in message payload
-    val messages = stream.map(record => record.value)
+    val messages = streamInput.map(record => record.value)
 
     messages.foreachRDD { rdd =>
       val spark = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
       import spark.implicits._
 
-      val dfkafka = rdd.toDF("msg").withColumn("_tmp", split($"msg", "\\,"))
+      val dfkafka = rdd.toDF("msg").withColumn("_tmp", split(col("msg"), "\\,"))
                        .select($"_tmp".getItem(0).as("name"),
                        to_date($"_tmp".getItem(1), "dd/MM/yyyy").as("date"),
                                $"_tmp".getItem(2).as("value").cast(DoubleType))
@@ -31,9 +30,7 @@ object ProcessIbex {
 
       //Incrementamos laiteracion
       finishedBatchesCounter.add(1)
-      if (finishedBatchesCounter.count == 1) {
-        startRedisDB(sparkRedis)
-      }
+      if (finishedBatchesCounter.count == 1) { startRedisDB(sparkRedis) }
 
       println(s"+------------ Batch ${finishedBatchesCounter.count} ------------+")
       dfkafka.show()

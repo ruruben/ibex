@@ -25,6 +25,7 @@
   </properties>
 
   <dependencies>
+
     <!-- https://mvnrepository.com/artifact/com.redislabs/spark-redis -->
     <dependency>
       <groupId>com.redislabs</groupId>
