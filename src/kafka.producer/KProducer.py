@@ -4,8 +4,8 @@ from kafka import KafkaProducer
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
-def parseFileLine(line):
 
+def parseFileLine(line):
     line_splitted = line.split(",")
 
     ticker = line_splitted[0]
@@ -24,7 +24,9 @@ def parseFileLine(line):
     print(ticker + ',' + date + ',' + line_splitted[2])
     return str(ticker + ',' + date + ',' + value1).encode('utf-8')
 
+
 path = '/home/ruben/Escritorio/tfm/ibex/src/kafka.producer/IBEX35_Individual_data/'
+
 fileANA = os.path.join(path, 'ACCIONA.csv')
 fileTEF = os.path.join(path, 'TELEFONICA.csv')
 fileACX = os.path.join(path, 'ACERINOX.csv')
@@ -51,4 +53,3 @@ for i in range(240):
 infileAna.close()
 infileTEL.close()
 infileACX.close()
-
