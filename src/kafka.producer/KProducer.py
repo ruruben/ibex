@@ -25,7 +25,7 @@ def parseFileLine(line):
     return str(ticker + ',' + date + ',' + value1).encode('utf-8')
 
 
-path = '/home/ruben/Escritorio/tfm/ibex/src/kafka.producer/IBEX35_Individual_data/'
+path = str(os.path.abspath(__file__))[0:-12] + 'IBEX35_Individual_data'
 
 fileANA = os.path.join(path, 'ACCIONA.csv')
 fileTEF = os.path.join(path, 'TELEFONICA.csv')
