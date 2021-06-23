@@ -1,6 +1,6 @@
 package com.ibex35.job
 
-import com.ibex35.service.IbexService.{startRedisDB, writeRedis}
+import com.ibex35.service.IbexService.{startRedisDB, writePostgre, writeRedis}
 import com.ibex35.utils.Constants.{finishedBatchesCounter, sparkRedis, ssc, streamInput}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
@@ -14,7 +14,7 @@ object ProcessIbex {
     Logger.getLogger("akka").setLevel(Level.OFF)
 
     val messages = streamInput.map(record => record.value)
-
+    //spark.conf.set("spark.sql.session.timeZone", "UTC")
     messages.foreachRDD { rdd =>
       val spark = SparkSession.builder.config(rdd.sparkContext.getConf).getOrCreate()
       import spark.implicits._
@@ -55,12 +55,11 @@ object ProcessIbex {
       dfRedisJKafka.show()
       println("REDIS and KAFKA")
 
+      writePostgre(dfRedisJKafka)
 
       // ACTUALIZAMOS LA BD DE REDIS SI HAY COINCIDENCIAS
       writeRedis(dfRedisJKafka)
-
     }
-
     ssc.start()
     ssc.awaitTermination()
   }

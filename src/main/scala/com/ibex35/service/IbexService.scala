@@ -1,6 +1,7 @@
 package com.ibex35.service
 
 import org.apache.spark.SparkContext
+import org.apache.spark.sql.functions.current_timestamp
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.spark.util.LongAccumulator
 
@@ -29,5 +30,17 @@ object IbexService {
   def startRedisDB(ss: SparkSession): Unit = {
     ss.read.option("delimiter", ";").option("header", true).csv("src/main/scala/resource/redis.csv")
       .write.format("org.apache.spark.sql.redis").option("table", "ibex").mode(SaveMode.Overwrite).save()
+  }
+
+  def writePostgre(df: DataFrame) = {
+    df.withColumn("timestamp", current_timestamp())
+      .write
+      .format("jdbc")
+      .option("url", "jdbc:postgresql://localhost:5432/postgres")
+      .option("dbtable", "ibex")
+      .option("user", "postgres")
+      .option("password", "postgres")
+      .mode(SaveMode.Append)
+      .save()
   }
 }

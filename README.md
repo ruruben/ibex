@@ -1,4 +1,7 @@
 # Ibex 35
 ___
 
-![alt text](DIAGRAM.png)
+
+
+
+![alt text](doc/diagram.png)

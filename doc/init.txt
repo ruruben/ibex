@@ -1,0 +1,12 @@
+DOCKER:
+UN TERMINAL
+docker rm postgres; sudo docker run -it -p 5432:5432 -e POSTGRES_PASSWORD=postgres --name postgres postgres:11
+OTRO TERMINAL
+sudo docker ps
+docker exec -it <ID> -- bashdocker exec -it 4bf bash
+psql -U postgres
+\dt
+select * from ibex
+
+GRAFANA:
+sudo docker run -it -p 3000:3000 grafana/grafana
