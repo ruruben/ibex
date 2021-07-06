@@ -1,12 +1,13 @@
 DOCKER:
 UN TERMINAL
-docker rm postgres; sudo docker run -it -p 5432:5432 -e POSTGRES_PASSWORD=postgres --name postgres postgres:11
+sudo docker rm postgres; sudo docker run -it -p 5432:5432 -e POSTGRES_PASSWORD=postgres --name postgres postgres:11
 OTRO TERMINAL
-sudo docker ps
-docker exec -it <ID> -- bashdocker exec -it 4bf bash
-psql -U postgres
-\dt
-select * from ibex
+1. Conocer el id del container: sudo docker ps:
+2. Entrar al bash del container con la id esppecificada: sudo docker exec -it <ID> bash
+3. Entrar a mi base de datos: psql -U postgres
+4. Comando para ver las tablas en mi BD: \dt
+5. Consulta: select * from ibex;
 
 GRAFANA:
-sudo docker run -it -p 3000:3000 grafana/grafana
+1. Levantar grafana: sudo docker run -it -p 3000:3000 grafana/grafana
+2. Añadimos la BD: ifconfig

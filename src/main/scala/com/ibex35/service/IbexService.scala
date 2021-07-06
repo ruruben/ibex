@@ -1,7 +1,7 @@
 package com.ibex35.service
 
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.functions.current_timestamp
+import org.apache.spark.sql.functions.{col, current_timestamp, round}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.spark.util.LongAccumulator
 
@@ -20,7 +20,7 @@ object IbexService {
   }
 
   def writeRedis(df: DataFrame) = {
-    df.select("id", "name", "value_up", "value_down")
+    df.select("id", "ticker", "value_up", "value_down")
       .write.format("org.apache.spark.sql.redis")
       .option("table", "ibex")
       .mode(SaveMode.Append)
@@ -33,7 +33,8 @@ object IbexService {
   }
 
   def writePostgre(df: DataFrame) = {
-    df.withColumn("timestamp", current_timestamp())
+    df.withColumn("renta", round((col("sale")-(((col("value_up") - col("value_down"))/2)+ col("value_down")))*100/(((col("value_up") - col("value_down"))/2) + col("value_down")), 2))
+      .withColumn("timestamp", current_timestamp())
       .write
       .format("jdbc")
       .option("url", "jdbc:postgresql://localhost:5432/postgres")

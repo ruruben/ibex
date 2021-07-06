@@ -1,6 +1,7 @@
 import os
 import time, random
 from kafka import KafkaProducer
+from restartPostgre import restartBd
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
@@ -33,6 +34,8 @@ fileACX = os.path.join(path, 'ACERINOX.csv')
 infileAna = open(fileANA, 'r')
 infileTEL = open(fileTEF, 'r')
 infileACX = open(fileACX, 'r')
+
+restartBd()
 
 for i in range(240):
     print(i)

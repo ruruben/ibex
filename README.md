@@ -5,3 +5,5 @@ ___
 
 
 ![alt text](doc/diagram.png)
+
+select * from persons;
