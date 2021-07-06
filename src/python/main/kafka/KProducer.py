@@ -1,7 +1,7 @@
 import os
 import time, random
 from kafka import KafkaProducer
-from restartPostgre import restartBd
+from src.python.main.postgres.restartPostgre import restartBd
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
@@ -26,7 +26,7 @@ def parseFileLine(line):
     return str(ticker + ',' + date + ',' + value1).encode('utf-8')
 
 
-path = str(os.path.abspath(__file__))[0:-12] + 'IBEX35_Individual_data'
+path = str(os.path.abspath(__file__))[0:-12] + 'src/ibex35'
 
 fileANA = os.path.join(path, 'ACCIONA.csv')
 fileTEF = os.path.join(path, 'TELEFONICA.csv')
